@@ -2,7 +2,7 @@ import json
 import requests
 
 
-def get_host(ticket_id):
+def get_hosts(ticket_id):
     api_url = "http://localhost:58000/api/v1/host"
 
     headers = {"X-Auth-Token": "NC-19-7661d50f182946278a7e-nbi"}
@@ -11,12 +11,19 @@ def get_host(ticket_id):
 
     response_json = resp.json()
     hosts = response_json["response"]
-
+    formatted_hosts = []
     for host in hosts:
         if 'hostName' in host:
-            print(host["hostName"], "\t", host["hostIp"], "\t", host["hostMac"], "\t", host["connectedInterfaceName"])
+            formatted_host = format_dict_to_list(host)
+            #print(formatted_host)
+            formatted_hosts.append(formatted_host)
         else:
             continue
+    return formatted_hosts
+
+
+def format_dict_to_list(host):
+    return [host["hostName"], host["hostIp"], host["hostMac"], host["connectedInterfaceName"]]
 
 
 def get_hostcount(ticket_id):
