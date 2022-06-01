@@ -16,10 +16,8 @@ def get_networkdevices(ticket_id):
     for networkDevice in networkdevices:
         if "hostname" in networkDevice:
             formatted_networkdevices.append(format_dict_to_list(networkDevice))
-            print(format_dict_to_list(networkDevice))
         else:
             continue
-    print(networkdevices)
     return formatted_networkdevices
 
 def add_networkdevice(ticket_id):
@@ -32,7 +30,6 @@ def add_networkdevice(ticket_id):
     }
     resp = requests.post(api_url, headers=headers,  data=json.dumps(body))
     response_json = resp.json()
-    print(response_json)
 
 
 def format_dict_to_list(networkDevice):

@@ -9,8 +9,6 @@ def get_users(ticket_id):
 
     resp = requests.get(api_url, headers=headers, verify=False)
 
-    print("Request status: ", resp.status_code)
-
     response_json = resp.json()
     users = response_json["response"]
     formatted_users = []
@@ -22,5 +20,22 @@ def get_users(ticket_id):
         #print("Password:", user['password'])
     return formatted_users
 
+
 def format_dict_to_list(user, i):
     return [i['role'], user['username'], user['password']]
+
+
+def add_user(ticket_id, username, password):
+    user = {
+        "username": username,
+        "password": password,
+        "authorization": [{"role": "ROLE_ADMIN"}]
+    }
+    print(user)
+    api_url = "http://localhost:58000/api/v1/user"
+
+    headers = {"X-Auth-Token": ticket_id, 'Content-Type': 'application/json'}
+
+    resp = requests.post(api_url, headers=headers, data=json.dumps(user))
+
+    print(resp.json())
