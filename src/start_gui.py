@@ -2,10 +2,10 @@ import tkinter as tk
 from tkinter import ttk
 
 from host_service import get_hosts
-from networkdevice_service import get_networkdevices
+from networkdevice_service import add_networkdevice, get_networkdevices
 from user_service import get_users
 
-
+        
 SERVICE_TICKET = 'NC-19-7661d50f182946278a7e-nbi'
 
 
@@ -48,6 +48,7 @@ def load_network_devies():
 
     tk.Button(tab2, text="Update Devices", width=15,
               command=show_network_devices(listBox)).grid(row=4, column=0)
+    tk.Button(tab2, text="Add", width=15, command=add_networkdevice).grid(row=4, column=1)
     tk.Button(tab2, text="Close", width=15, command=exit).grid(row=4, column=1)
 
 def load_users():
