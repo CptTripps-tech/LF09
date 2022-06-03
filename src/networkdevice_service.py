@@ -1,15 +1,16 @@
-import ipaddress
 import json
+
 import requests
 
 
-def get_networkdevices(ticket_id):
+def call_api(ticket_id):
     api_url = "http://localhost:58000/api/v1/network-device"
-
     headers = {"X-Auth-Token": ticket_id}
+    return requests.get(api_url, headers=headers, verify=False)
 
-    resp = requests.get(api_url, headers=headers, verify=False)
 
+def get_networkdevices(ticket_id):
+    resp = call_api(ticket_id)
     response_json = resp.json()
     networkdevices = response_json["response"]
     formatted_networkdevices = []
@@ -22,6 +23,7 @@ def get_networkdevices(ticket_id):
     print(networkdevices)
     return formatted_networkdevices
 
+
 def add_networkdevice(ticket_id):
     api_url = "http://localhost:58000/api/v1/network-device"
 
@@ -30,10 +32,10 @@ def add_networkdevice(ticket_id):
         "ipAddress": "192.2.1.3",
         "globalCredentialsId": ""
     }
-    resp = requests.post(api_url, headers=headers,  data=json.dumps(body))
+    resp = requests.post(api_url, headers=headers, data=json.dumps(body))
     response_json = resp.json()
     print(response_json)
 
 
 def format_dict_to_list(networkDevice):
-    return [networkDevice["hostname"],  networkDevice["platformId"], networkDevice["managementIpAddress"]]
+    return [networkDevice["hostname"], networkDevice["platformId"], networkDevice["managementIpAddress"]]
