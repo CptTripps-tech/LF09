@@ -1,14 +1,20 @@
 import requests
 
 
-def call_api(ticket_id):
+def get_api(ticket_id):
     api_url = "http://localhost:58000/api/v1/user"
     headers = {"X-Auth-Token": ticket_id}
     return requests.get(api_url, headers=headers, verify=False)
 
 
+def post_api(ticket_id, data):
+    api_url = "http://localhost:58000/api/v1/user"
+    headers = {"X-Auth-Token": ticket_id, 'Content-Type': 'application/json'}
+    return requests.post(api_url, headers=headers, data=data)
+
+
 def get_users(ticket_id):
-    resp = call_api(ticket_id)
+    resp = get_api(ticket_id)
     print("Request status: ", resp.status_code)
 
     response_json = resp.json()
@@ -25,3 +31,19 @@ def get_users(ticket_id):
 
 def format_dict_to_list(user, i):
     return [i['role'], user['username'], user['password']]
+
+
+def add_user(ticket_id, username, password):
+    user = {
+        "username": username,
+        "password": password,
+        "authorization": [{"role": "ROLE_ADMIN"}]
+    }
+    print(user)
+    api_url = "http://localhost:58000/api/v1/user"
+
+    headers = {"X-Auth-Token": ticket_id, 'Content-Type': 'application/json'}
+
+    resp = post_api(ticket_id, data=json.dumps(user))
+
+    print(resp.json())
