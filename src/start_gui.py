@@ -1,11 +1,14 @@
+import sys
+
+import requests
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 
 from host_service import get_hosts
 from networkdevice_service import add_networkdevice, get_networkdevices
 from user_service import get_users
 
-        
 SERVICE_TICKET = 'NC-19-7661d50f182946278a7e-nbi'
 
 
@@ -14,10 +17,12 @@ def show_hosts(listBox):
     for i, (name, ip, mac, interface) in enumerate(tempList, start=1):
         listBox.insert("", "end", values=(i, name, ip, mac, interface))
 
+
 def show_network_devices(listBox):
     tempList = get_networkdevices(SERVICE_TICKET)
     for i, (hostname, platformId, managementIpAddress) in enumerate(tempList, start=1):
         listBox.insert("", "end", values=(i, hostname, platformId, managementIpAddress))
+
 
 def show_users(listBox):
     tempList = get_users(SERVICE_TICKET)
@@ -51,6 +56,7 @@ def load_network_devies():
     tk.Button(tab2, text="Add", width=15, command=add_networkdevice).grid(row=4, column=1)
     tk.Button(tab2, text="Close", width=15, command=exit).grid(row=4, column=1)
 
+
 def load_users():
     tk.Label(tab3).grid(row=0, columnspan=4)
     cols = ('Index', 'role', 'username', 'password')
@@ -60,7 +66,7 @@ def load_users():
     listBox.grid(row=1, column=0, columnspan=2)
 
     tk.Button(tab3, text="Update Users", width=15,
-            command=show_users(listBox)).grid(row=4, column=0)
+              command=show_users(listBox)).grid(row=4, column=0)
     tk.Button(tab3, text="Close", width=15, command=exit).grid(row=4, column=1)
 
 
@@ -81,9 +87,12 @@ note.add(tab2, text="Networkdevices")
 note.add(tab3, text="Users")
 note.pack(fill=tk.BOTH, expand=True)
 
-load_hosts(show_hosts, tab1)
-load_network_devies()
-load_users()
-
+try:
+    load_hosts(show_hosts, tab1)
+    load_network_devies()
+    load_users()
+except requests.exceptions.ConnectionError as e:
+    tk.messagebox.showerror(title="Fehlermeldung", message="Fehler beim Abrufen der API",)
+    sys.exit(1)
 
 app.mainloop()
